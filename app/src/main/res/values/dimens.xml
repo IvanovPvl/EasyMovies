@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="movie_item_margin">2dp</dimen>
+    <dimen name="detail_text_margin_top">8dp</dimen>
+    <dimen name="detail_text_margin_bottom">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="detail_padding">16dp</dimen>
+
+    <integer name="span_count">2</integer>
+    <bool name="is_dialog">false</bool>
+</resources>

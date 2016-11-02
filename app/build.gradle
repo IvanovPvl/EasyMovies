@@ -1,0 +1,120 @@
+plugins {
+    id "me.tatarka.retrolambda" version "3.3.0"
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def computeVersionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    compileSdkVersion 25
+    buildToolsVersion "24.0.3"
+    defaultConfig {
+        applicationId "ru.ionlabs.easymovies"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode versionMajor * 100 + versionMinor * 10 + versionPatch
+        versionName computeVersionName
+
+        buildConfigField "String", "API_KEY", getApiKey("api_key")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+            debuggable true
+            debuggable true
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+
+           applicationVariants.all { variant ->
+               variant.outputs.each { output ->
+                   project.ext { appName = 'EasyMovies' }
+                   def newName = output.outputFile.name
+                   newName = newName.replace("app-", "$project.ext.appName-")
+                   newName = newName.replace("-debug", "-debug." + computeVersionName)
+                   output.outputFile = new File(output.outputFile.parent, newName)
+               }
+           }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    final SUPPORT_LIBRARY_VERSION = '25.0.0'
+    final RETROFIT_VERSION = '2.1.0'
+    final DAGGER_VERSION = '2.7'
+    final AUTO_VALUE_VERSION = '1.3'
+    final BUTTERKNIFE_VERSION = '8.4.0'
+    final SQLBRITE_VERSION = '0.7.0'
+    final RXJAVA_VERSION = '1.1.6'
+    final RXANDROID_VERSION = '1.2.1'
+    final TIMBER_VERSION = '4.3.1'
+    final GLIDE_VERSION = '3.7.0'
+    final AUTO_VALUE_GSON_VERSION = '0.4.3'
+
+    def daggerCompiler = "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    def jUnit = "junit:junit:4.12"
+    def mockito = "org.mockito:mockito-core:1.10.19"
+
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+
+    compile "com.squareup.sqlbrite:sqlbrite:$SQLBRITE_VERSION"
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+
+    compile "com.github.bumptech.glide:glide:$GLIDE_VERSION"
+    compile "io.reactivex:rxandroid:$RXANDROID_VERSION"
+    compile "io.reactivex:rxjava:$RXJAVA_VERSION"
+
+    compile "com.jakewharton.timber:timber:$TIMBER_VERSION"
+    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+    apt     "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+
+    apt      "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION"
+    provided 'com.jakewharton.auto.value:auto-value-annotations:1.3'
+
+    apt      "com.ryanharter.auto.value:auto-value-gson:$AUTO_VALUE_GSON_VERSION"
+    provided "com.ryanharter.auto.value:auto-value-gson:$AUTO_VALUE_GSON_VERSION"
+
+    compile  "com.google.dagger:dagger:$DAGGER_VERSION"
+    provided 'org.glassfish:javax.annotation:10.0-b28' // Required by Dagger2
+    apt daggerCompiler
+
+    // Unit tests dependencies
+    testCompile jUnit
+    testCompile mockito
+    testCompile 'org.robolectric:robolectric:3.1'
+}
+
+def getApiKey(String property) {
+    Properties properties = new Properties()
+    try {
+        properties.load(new FileInputStream("api_key"))
+    } catch (IOException ex) {
+        properties.setProperty(property, "default_key")
+    }
+    return "\"" + properties.getProperty(property) +"\""
+}

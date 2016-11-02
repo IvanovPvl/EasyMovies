@@ -1,0 +1,27 @@
+<resources>
+
+    <style name="Theme.EasyMovies.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+    
+    <style name="Theme.EasyMovies" parent="Theme.EasyMovies.Base" />
+
+    <style name="Theme.EasyMovies.Detail" parent="Theme.EasyMovies" />
+
+    <style name="DetailTextAppearanceBase" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primary_light</item>
+    </style>
+
+    <style name="CaptionTextAppearance" parent="DetailTextAppearanceBase">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="DetailTextAppearance" parent="DetailTextAppearanceBase">
+        <item name="android:layout_marginTop">@dimen/detail_text_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/detail_text_margin_bottom</item>
+    </style>
+
+</resources>
